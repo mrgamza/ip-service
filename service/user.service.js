@@ -50,7 +50,7 @@ exports.readAll = function (handler) {
                     handler();
                 } else {
                     const ips = results.map(x => {
-                        return {'name': x.name, 'address': x.address}
+                        return {'name': x.name, 'ip': x.address}
                     })
                     handler(ips);
                 }
