@@ -6,13 +6,9 @@ const router = express();
 
 router.use(bodyParser.json());
 
-router.get('/', (request, response) => {
-    response.send('Hello, ip-service');
-})
-
-router.get('/ip/', ipController.getAll);
-router.get('/ip/:name', ipController.get);
-router.post('/ip/:name', ipController.post);
+router.get('/', ipController.getAll);
+router.get('/:name', ipController.get);
+router.post('/:name', ipController.post);
 
 const port = process.env.PORT || 3000;
 router.listen(port, () => {
