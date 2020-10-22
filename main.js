@@ -1,6 +1,7 @@
 const ipController = require('./controller/ip.controller');
 const express = require('express');
 const bodyParser = require('body-parser');
+const http = require('http');
 
 const router = express();
 
@@ -14,3 +15,7 @@ const port = process.env.PORT || 3000;
 router.listen(port, () => {
     console.log("Server is running.");
 });
+
+setInterval(() => {
+    http.get("https://outofcode-ip-service.herokuapp.com/");
+}, 600000);
