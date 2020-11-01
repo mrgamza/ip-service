@@ -1,3 +1,5 @@
+require ('newrelic')
+
 const ipController = require('./controller/ip.controller');
 const express = require('express');
 const bodyParser = require('body-parser');
