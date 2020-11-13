@@ -1,21 +1,24 @@
 const userService = require('../service/user.service');
 
+function success(response, message) {
+    response.status(200).json(
+        {
+            code: '0000',
+            message: 'success',
+            ips: message
+        }
+    );
+}
+
 exports.getAll = async function (request, response) {
     try {
         userService.readAll((ips, error) => {
-            console.log('IP address is : ', ips);
             if (error) {
                 response.status(500).json({error: error.toString()})
             } else if (ips.count === 0) {
                 response.status(204).send();
             } else {
-                response.status(200).json(
-                    {
-                        code: '0000',
-                        message: 'success',
-                        ips: ips
-                    }
-                );
+                success(response, ips);
             }
         });
     } catch (error) {
@@ -28,19 +31,12 @@ exports.get = async function (request, response) {
         const name = request.params.name;
 
         userService.read(name, (ip, error) => {
-            console.log('IP is : ', ip);
             if (error) {
                 response.status(500).json({error: error.toString()})
             } else if (ip === '') {
                 response.status(204).send();
             } else {
-                response.status(200).json(
-                    {
-                        code: '0000',
-                        message: 'success',
-                        ip: ip
-                    }
-                );
+                success(response, ip);
             }
         });
     } catch (error) {
@@ -57,14 +53,7 @@ exports.post = async function (request, response) {
             if (error) {
                 response.status(500).json({error: error.toString()})
             } else {
-                console.log('IP is : ', ip);
-                response.json (
-                    {
-                        code: '0000',
-                        message: 'success',
-                        ip: ip
-                    }
-                );
+                success(response, ip);
             }
         }
 

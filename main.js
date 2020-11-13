@@ -19,5 +19,6 @@ router.listen(port, () => {
 });
 
 setInterval(() => {
+    console.log('server interval call');
     http.get("http://outofcode-ip-service.herokuapp.com/default");
 }, 600000);
