@@ -10,6 +10,10 @@ function success(response, message) {
     );
 }
 
+exports.getHello = async function (request, response) {
+    success(response, "Hello, ip-service!")
+}
+
 exports.getAll = async function (request, response) {
     try {
         userService.readAll((ips, error) => {

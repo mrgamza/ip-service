@@ -9,7 +9,7 @@ const router = express();
 
 router.use(bodyParser.json());
 
-router.get('/', ipController.getAll);
+router.get('/', ipController.getHello);
 router.get('/:name', ipController.get);
 router.post('/:name', ipController.post);
 
