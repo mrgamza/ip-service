@@ -22,7 +22,6 @@
     <list default="true" id="141956cd-5c2a-4a2d-8b03-c71f84523347" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/ip.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/ip.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +85,7 @@
       <workItem from="1604237364852" duration="2303000" />
       <workItem from="1604405164451" duration="498000" />
       <workItem from="1605283801349" duration="2491000" />
-      <workItem from="1605618848919" duration="325000" />
+      <workItem from="1605618848919" duration="514000" />
     </task>
     <servers />
   </component>

@@ -11,7 +11,7 @@ function success(response, message) {
 }
 
 exports.getHello = async function (request, response) {
-    success(response, "Hello, ip-service!")
+    response.status(200).send("Hello, ip-service!")
 }
 
 exports.getAll = async function (request, response) {
