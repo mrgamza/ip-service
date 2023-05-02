@@ -5,27 +5,26 @@
 
 'use strict'
 
-var path = require('path')
-var logger = require('./logger')
-var NAMES = require('./metrics/names')
-var properties = require('./util/properties')
+const path = require('path')
+const logger = require('./logger')
+const NAMES = require('./metrics/names')
+const properties = require('./util/properties')
 const shimmer = require('./shimmer')
 
 // Static variable holding map of un-instrumented modules for use in the future
-var uninstrumented = Object.create(null)
+const uninstrumented = Object.create(null)
 
 // Log a helpful message about un-instrumented modules
 function logUninstrumented() {
   const modules = Object.keys(uninstrumented)
   if (modules.length > 0) {
-    var message =
+    let message =
       'The newrelic module must be the first module required.\n' +
       'The following modules were required before newrelic and are not being ' +
       'instrumented:'
 
     modules.forEach(function buildMessage(module) {
-      message += '\n\t' + uninstrumented[module].name
-        + ': ' + uninstrumented[module].filename
+      message += '\n\t' + uninstrumented[module].name + ': ' + uninstrumented[module].filename
     })
 
     logger.warn(message)
@@ -42,9 +41,9 @@ function createMetrics(metrics) {
   }
 
   modules.forEach(function addMetrics(module) {
-    metrics.getOrCreateMetric(
-      NAMES.SUPPORTABILITY.UNINSTRUMENTED + '/' + uninstrumented[module].name
-    ).incrementCallCount()
+    metrics
+      .getOrCreateMetric(NAMES.SUPPORTABILITY.UNINSTRUMENTED + '/' + uninstrumented[module].name)
+      .incrementCallCount()
   })
 }
 
@@ -58,7 +57,7 @@ function check() {
   // and mysql2 work.
   instrumentations.push('pg.js', 'mysql2')
 
-  for (var filename in require.cache) {
+  for (const filename in require.cache) {
     if (!properties.hasOwn(require.cache, filename)) {
       continue
     }

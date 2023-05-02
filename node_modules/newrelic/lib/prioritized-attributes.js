@@ -6,7 +6,7 @@
 'use strict'
 
 const Config = require('./config')
-const logger = require('./logger').child({component: 'attributes'})
+const logger = require('./logger').child({ component: 'attributes' })
 const isValidType = require('./util/attribute-types')
 const byteUtils = require('./util/byte-limit')
 const properties = require('./util/properties')
@@ -24,26 +24,26 @@ class PrioritizedAttributes {
     this.attributes = new Map()
   }
 
-
   isValidLength(str) {
     return typeof str === 'number' || byteUtils.isValidLength(str, 255)
   }
 
   _set(destinations, key, value, truncateExempt, priority) {
-    this.attributes.set(key, {value, destinations, truncateExempt, priority})
+    this.attributes.set(key, { value, destinations, truncateExempt, priority })
   }
 
   get(dest) {
     const attrs = Object.create(null)
 
-    for (let [key, attr] of this.attributes) {
+    for (const [key, attr] of this.attributes) {
       if (!(attr.destinations & dest)) {
         continue
       }
 
-      attrs[key] = typeof attr.value === 'string' && !attr.truncateExempt
-        ? byteUtils.truncate(attr.value, 255)
-        : attr.value
+      attrs[key] =
+        typeof attr.value === 'string' && !attr.truncateExempt
+          ? byteUtils.truncate(attr.value, 255)
+          : attr.value
     }
 
     return attrs
@@ -81,7 +81,7 @@ class PrioritizedAttributes {
     }
 
     if (existingAttribute && priority < existingAttribute.priority) {
-      logger.debug('incoming priority for \'%s\' is lower than existing, not updating.', key)
+      logger.debug("incoming priority for '%s' is lower than existing, not updating.", key)
       logger.trace(
         '%s attribute retained value: %s, ignored value: %s',
         key,
@@ -94,8 +94,8 @@ class PrioritizedAttributes {
     if (!isValidType(value)) {
       logger.debug(
         'Not adding attribute %s with %s value type. This is expected for undefined' +
-        'attributes and only an issue if an attribute is not expected to be undefined' +
-        'or not of the type expected.',
+          'attributes and only an issue if an attribute is not expected to be undefined' +
+          'or not of the type expected.',
         key,
         typeof value
       )
@@ -103,13 +103,9 @@ class PrioritizedAttributes {
     }
 
     if (!this.isValidLength(key)) {
-      logger.warn(
-        'Length limit exceeded for attribute name, not adding: %s',
-        key
-      )
+      logger.warn('Length limit exceeded for attribute name, not adding: %s', key)
       return
     }
-
 
     // Only set the attribute if at least one destination passed
     const validDestinations = this.filter(destinations, key)
@@ -119,8 +115,7 @@ class PrioritizedAttributes {
 
     if (droppableAttributeKey) {
       logger.trace(
-        'dropping existing lower priority attribute %s ' +
-        'to add higher priority attribute %s',
+        'dropping existing lower priority attribute %s ' + 'to add higher priority attribute %s',
         droppableAttributeKey,
         key
       )
@@ -132,7 +127,7 @@ class PrioritizedAttributes {
   }
 
   addAttributes(destinations, attrs) {
-    for (let key in attrs) {
+    for (const key in attrs) {
       if (properties.hasOwn(attrs, key)) {
         this.addAttribute(destinations, key, attrs[key])
       }
@@ -199,7 +194,7 @@ class PrioritizedAttributes {
 }
 
 function makeFilter(scope) {
-  const {attributeFilter} = Config.getInstance()
+  const { attributeFilter } = Config.getInstance()
   if (scope === 'transaction') {
     return (d, k) => attributeFilter.filterTransaction(d, k)
   } else if (scope === 'segment') {

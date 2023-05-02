@@ -12,21 +12,23 @@ const TO_MILLIS = 1e3
 
 function recordWeb(segment, scope) {
   // in web metrics, scope is required
-  if (!scope) return
+  if (!scope) {
+    return
+  }
 
-  var tx = segment.transaction
+  const tx = segment.transaction
   // if there was a nested webTransaction use its recorder instead
   if (tx.type === 'web' && tx.baseSegment && segment !== tx.baseSegment) {
     return
   }
 
-  var duration = segment.getDurationInMillis()
-  var totalTime = tx.trace.getTotalTimeDurationInMillis()
-  var exclusive = segment.getExclusiveDurationInMillis()
-  var partial = segment.partialName
-  var config = segment.transaction.agent.config
+  const duration = segment.getDurationInMillis()
+  const totalTime = tx.trace.getTotalTimeDurationInMillis()
+  const exclusive = segment.getExclusiveDurationInMillis()
+  const partial = segment.partialName
+  const config = segment.transaction.agent.config
   // named / key transaction support requires per-name apdexT
-  var keyApdexInMillis = config.web_transactions_apdex[scope] * TO_MILLIS || 0
+  const keyApdexInMillis = config.web_transactions_apdex[scope] * TO_MILLIS || 0
 
   tx.measure(NAMES.WEB.RESPONSE_TIME, null, duration, exclusive)
   tx.measure(NAMES.WEB.TOTAL_TIME, null, totalTime, exclusive)
@@ -41,11 +43,7 @@ function recordWeb(segment, scope) {
   if (config.distributed_tracing.enabled) {
     recordDistributedTrace(tx, 'Web', duration, exclusive)
   } else if (tx.incomingCatId) {
-    tx.measure(
-      NAMES.CLIENT_APPLICATION + '/' + tx.incomingCatId + "/all",
-      null,
-      tx.catResponseTime
-    )
+    tx.measure(NAMES.CLIENT_APPLICATION + '/' + tx.incomingCatId + '/all', null, tx.catResponseTime)
   }
 
   tx._setApdex(NAMES.APDEX + '/' + partial, duration, keyApdexInMillis)

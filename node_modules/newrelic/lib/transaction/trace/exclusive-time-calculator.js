@@ -36,7 +36,7 @@ class ExclusiveCalculator {
           segment: segment,
           childPairs: []
         })
-        for (var i = children.length - 1; i >= 0; --i) {
+        for (let i = children.length - 1; i >= 0; --i) {
           this.toProcess.push(children[i])
         }
       }
@@ -60,7 +60,7 @@ class ExclusiveCalculator {
     // of children left to process is 0).
     while (--parent.childrenLeft === 0) {
       // pull off the finished parent and assign the exclusive duration
-      const {segment: finishedParent, childPairs} = this.parentStack.pop()
+      const { segment: finishedParent, childPairs } = this.parentStack.pop()
       const timer = finishedParent.timer
       const finishedEnd = timer.getDurationInMillis() + timer.start
       let duration = finishedParent.getDurationInMillis()
@@ -103,20 +103,17 @@ function merge(first, second) {
   }
 
   const res = []
-  var resIdx = 0
-  var firstIdx = 0
-  var secondIdx = 0
+  let resIdx = 0
+  let firstIdx = 0
+  let secondIdx = 0
   // N.B. this is destructive, it will be updating the end times for range arrays in
   // the input arrays.  If we need to reuse these arrays for anything, this behavior
   // must be changed.
-  var currInterval = first[firstIdx][0] < second[secondIdx][0]
-    ? first[firstIdx++]
-    : second[secondIdx++]
+  let currInterval =
+    first[firstIdx][0] < second[secondIdx][0] ? first[firstIdx++] : second[secondIdx++]
 
   while (firstIdx < first.length && secondIdx < second.length) {
-    var next = first[firstIdx][0] < second[secondIdx][0]
-      ? first[firstIdx++]
-      : second[secondIdx++]
+    const next = first[firstIdx][0] < second[secondIdx][0] ? first[firstIdx++] : second[secondIdx++]
     if (next[0] <= currInterval[1]) {
       // if the segment overlaps, update the end of the current merged segment
       currInterval[1] = Math.max(next[1], currInterval[1])
@@ -126,7 +123,6 @@ function merge(first, second) {
       currInterval = next
     }
   }
-
 
   const firstIsRemainder = firstIdx !== first.length
   const remainder = firstIsRemainder ? first : second
@@ -140,7 +136,7 @@ function merge(first, second) {
   res[resIdx++] = currInterval
 
   // append the remaining non-overlapping ranges
-  for (;remainderIdx < remainder.length; ++remainderIdx) {
+  for (; remainderIdx < remainder.length; ++remainderIdx) {
     res[resIdx++] = remainder[remainderIdx]
   }
 

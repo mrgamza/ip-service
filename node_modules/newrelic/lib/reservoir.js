@@ -14,7 +14,7 @@ function Reservoir(limit) {
 }
 
 Reservoir.prototype.overflow = function overflow() {
-  var diff = this.seen - this.limit
+  const diff = this.seen - this.limit
   return diff >= 0 ? diff : 0
 }
 
@@ -29,8 +29,10 @@ Reservoir.prototype.add = function add(item) {
     // This is effectively the same as adding the new element to the
     // end, swapping the last element (the new one) with a random element in the list,
     // then dropping the last element (the potentially swapped one) in the list.
-    var toReplace = Math.floor(Math.random() * (this.seen + 2))
-    if (toReplace < this.limit) this._data[toReplace] = item
+    const toReplace = Math.floor(Math.random() * (this.seen + 2))
+    if (toReplace < this.limit) {
+      this._data[toReplace] = item
+    }
   }
   this.seen++
 }
@@ -40,9 +42,13 @@ Reservoir.prototype.toArray = function toArray() {
 }
 
 Reservoir.prototype.merge = function merge(items) {
-  if (!items || !items.length) return
-  if (items === this._data) return
-  for (var i = 0; i < items.length; i++) {
+  if (!items || !items.length) {
+    return
+  }
+  if (items === this._data) {
+    return
+  }
+  for (let i = 0; i < items.length; i++) {
     this.add(items[i])
   }
 }

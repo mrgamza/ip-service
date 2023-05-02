@@ -5,7 +5,7 @@ function success(response, message) {
         {
             code: '0000',
             message: 'success',
-            ip: message
+            ips: message
         }
     );
 }

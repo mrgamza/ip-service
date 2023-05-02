@@ -9,14 +9,13 @@ module.exports = parse
 module.exports.fromString = fromString
 module.exports.fromMap = fromMap
 
-
 // this creates a copy of trim that can be used with map
-var trim = Function.prototype.call.bind(String.prototype.trim)
-var logger = require('../logger').child({component: 'label-parser'})
-var stringify = require('json-stringify-safe')
+const trim = Function.prototype.call.bind(String.prototype.trim)
+const logger = require('../logger').child({ component: 'label-parser' })
+const stringify = require('json-stringify-safe')
 
 function parse(labels) {
-  var results
+  let results
 
   if (!labels) {
     return []
@@ -34,15 +33,14 @@ function parse(labels) {
 }
 
 function fromString(raw) {
-  var map = Object.create(null)
+  const map = Object.create(null)
 
   if (!raw) {
-    return {labels: [], warnings: []}
+    return { labels: [], warnings: [] }
   }
 
-  var pairs = raw.split(';').map(trim)
-  var parts
-
+  const pairs = raw.split(';').map(trim)
+  let parts
 
   while (!pairs[pairs.length - 1]) {
     pairs.pop()
@@ -52,7 +50,7 @@ function fromString(raw) {
     pairs.shift()
   }
 
-  for (var i = 0, l = pairs.length; i < l; ++i) {
+  for (let i = 0, l = pairs.length; i < l; ++i) {
     parts = pairs[i].split(':').map(trim)
 
     if (parts.length !== 2) {
@@ -69,28 +67,24 @@ function fromString(raw) {
   return fromMap(map)
 
   function warn(message) {
-    return {labels: [], warnings: [
-      'Invalid Label String: ' + raw,
-      message
-    ]}
+    return { labels: [], warnings: ['Invalid Label String: ' + raw, message] }
   }
 }
 
 function fromMap(map) {
-  var warnings = []
-  var labels = []
+  const warnings = []
+  let labels = []
 
   Object.keys(map).forEach(function processKeys(key) {
-    var type = truncate(key, 255)
+    const type = truncate(key, 255)
 
     if (!map[key] || typeof map[key] !== 'string') {
       return warnings.push(
-        'Label value for ' + type +
-        'should be a string with a length between 1 and 255 characters'
+        'Label value for ' + type + 'should be a string with a length between 1 and 255 characters'
       )
     }
 
-    var value = truncate(map[key], 255)
+    const value = truncate(map[key], 255)
 
     if (type !== key) {
       warnings.push('Label key too long: ' + type)
@@ -100,7 +94,7 @@ function fromMap(map) {
       warnings.push('Label value too long: ' + value)
     }
 
-    labels.push({label_type: type, label_value: value})
+    labels.push({ label_type: type, label_value: value })
   })
 
   if (labels.length > 64) {
@@ -116,15 +110,15 @@ function fromMap(map) {
     }
   }
 
-  return {labels: labels, warnings: warnings}
+  return { labels: labels, warnings: warnings }
 }
 
 function truncate(str, max) {
-  var len = 0
-  var chr
-  for (var i = 0, l = str.length; i < l; ++i) {
-    chr = str.charCodeAt(i)
-    if (chr >= 0xD800 && chr <= 0xDBFF && i !== l) {
+  let len = 0
+  let i
+  for (i = 0; i < str.length; ++i) {
+    const chr = str.charCodeAt(i)
+    if (chr >= 0xd800 && chr <= 0xdbff && i !== str.length) {
       i += 1
     }
 

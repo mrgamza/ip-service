@@ -14,11 +14,12 @@ module.exports = function initialize(agent, connect, moduleName, shim) {
   shim.setFramework(shim.CONNECT)
 
   shim.setRouteParser(function parseRoute(shim, fn, fnName, route) {
-    return route.url
+    return route
   })
 
-  var proto = (connect && connect.HTTPServer && connect.HTTPServer.prototype) || // v1
-              (connect && connect.proto) // v2
+  const proto =
+    (connect && connect.HTTPServer && connect.HTTPServer.prototype) || // v1
+    (connect && connect.proto) // v2
 
   shim.wrapMiddlewareMounter(proto, 'use', {
     route: shim.FIRST,
@@ -30,7 +31,7 @@ module.exports = function initialize(agent, connect, moduleName, shim) {
 }
 
 function wrapMiddleware(shim, middleware, name, route) {
-  var spec = {
+  const spec = {
     matchArity: true,
     route: route,
     type: shim.MIDDLEWARE,
@@ -55,9 +56,9 @@ function wrapMiddleware(shim, middleware, name, route) {
 
 function wrapConnectExport(shim, connect, v3) {
   shim.wrapExport(connect, function wrapExport(shim, fn) {
-    var wrapper = shim.wrap(fn, function wrapConnect(shim, _fn) {
+    const wrapper = shim.wrap(fn, function wrapConnect(shim, _fn) {
       return function wrappedConnect() {
-        var res = _fn.apply(this, arguments)
+        const res = _fn.apply(this, arguments)
         if (v3) {
           shim.wrapMiddlewareMounter(res, 'use', {
             route: shim.FIRST,

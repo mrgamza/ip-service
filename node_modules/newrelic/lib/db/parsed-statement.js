@@ -5,9 +5,8 @@
 
 'use strict'
 
-const {DB, ALL} = require('../metrics/names')
-const {DESTINATIONS} = require('../config/attribute-filter')
-
+const { DB, ALL } = require('../metrics/names')
+const { DESTINATIONS } = require('../config/attribute-filter')
 
 function ParsedStatement(type, operation, collection, raw) {
   this.type = type
@@ -23,12 +22,12 @@ function ParsedStatement(type, operation, collection, raw) {
 }
 
 ParsedStatement.prototype.recordMetrics = function recordMetrics(segment, scope) {
-  var duration = segment.getDurationInMillis()
-  var exclusive = segment.getExclusiveDurationInMillis()
-  var transaction = segment.transaction
-  var type = transaction.isWeb() ? DB.WEB : DB.OTHER
-  var thisTypeSlash = this.type + '/'
-  var operation = DB.OPERATION + '/' + thisTypeSlash + this.operation
+  const duration = segment.getDurationInMillis()
+  const exclusive = segment.getExclusiveDurationInMillis()
+  const transaction = segment.transaction
+  const type = transaction.isWeb() ? DB.WEB : DB.OTHER
+  const thisTypeSlash = this.type + '/'
+  const operation = DB.OPERATION + '/' + thisTypeSlash + this.operation
 
   // Note, an operation metric should _always_ be created even if the action was
   // a statement. This is part of the spec.
@@ -44,9 +43,9 @@ ParsedStatement.prototype.recordMetrics = function recordMetrics(segment, scope)
   // as the scoped metric for transaction breakdowns. Otherwise, skip the
   // 'statement' metric and use the 'operation' metric as the scoped metric for
   // transaction breakdowns.
+  let collection
   if (this.collection) {
-    var collection =
-      DB.STATEMENT + '/' + thisTypeSlash + this.collection + '/' + this.operation
+    collection = DB.STATEMENT + '/' + thisTypeSlash + this.collection + '/' + this.operation
     transaction.measure(collection, null, duration, exclusive)
     if (scope) {
       transaction.measure(collection, scope, duration, exclusive)
@@ -63,18 +62,13 @@ ParsedStatement.prototype.recordMetrics = function recordMetrics(segment, scope)
   // Datastore instance metrics.
   const attributes = segment.attributes.get(DESTINATIONS.TRANS_SEGMENT)
   if (attributes.host && attributes.port_path_or_id) {
-    var instanceName = DB.INSTANCE + '/' + thisTypeSlash + attributes.host +
-      '/' + attributes.port_path_or_id
+    const instanceName =
+      DB.INSTANCE + '/' + thisTypeSlash + attributes.host + '/' + attributes.port_path_or_id
     transaction.measure(instanceName, null, duration, exclusive)
   }
 
   if (this.raw) {
-    transaction.agent.queries.add(
-      segment,
-      this.type.toLowerCase(),
-      this.raw,
-      this.trace
-    )
+    transaction.agent.queries.add(segment, this.type.toLowerCase(), this.raw, this.trace)
   }
 }
 

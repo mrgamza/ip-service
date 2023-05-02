@@ -10,8 +10,7 @@
  * CONSTANTS
  *
  */
-var FROM_MILLIS = 1e-3
-
+const FROM_MILLIS = 1e-3
 
 function ApdexStats(apdexT) {
   if (!apdexT && apdexT !== 0) {
@@ -25,7 +24,7 @@ function ApdexStats(apdexT) {
 }
 
 ApdexStats.prototype.recordValue = function recordValue(time, overrideApdex) {
-  var apdexT = overrideApdex || this.apdexT
+  const apdexT = overrideApdex || this.apdexT
   if (time <= apdexT) {
     ++this.satisfying
   } else if (time <= 4 * apdexT) {
@@ -35,8 +34,10 @@ ApdexStats.prototype.recordValue = function recordValue(time, overrideApdex) {
   }
 }
 
-ApdexStats.prototype.recordValueInMillis =
-function recordValueInMillis(timeInMillis, overrideApdex) {
+ApdexStats.prototype.recordValueInMillis = function recordValueInMillis(
+  timeInMillis,
+  overrideApdex
+) {
   this.recordValue(timeInMillis * FROM_MILLIS, overrideApdex * FROM_MILLIS)
 }
 
@@ -71,14 +72,7 @@ ApdexStats.prototype.merge = function merge(other) {
  *                  load times, respectively.
  */
 ApdexStats.prototype.toJSON = function toJSON() {
-  return [
-    this.satisfying,
-    this.tolerating,
-    this.frustrating,
-    this.apdexT,
-    this.apdexT,
-    0
-  ]
+  return [this.satisfying, this.tolerating, this.frustrating, this.apdexT, this.apdexT, 0]
 }
 
 module.exports = ApdexStats

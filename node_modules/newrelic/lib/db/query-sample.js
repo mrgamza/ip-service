@@ -5,9 +5,9 @@
 
 'use strict'
 
-var codec = require('../util/codec')
-var Stats = require('../stats')
-var util = require('util')
+const codec = require('../util/codec')
+const Stats = require('../stats')
+const util = require('util')
 
 function QuerySample(tracer, slowQuery) {
   Stats.call(this)
@@ -20,7 +20,9 @@ util.inherits(QuerySample, Stats)
 
 QuerySample.prototype.aggregate = function aggregate(slowQuery) {
   this.recordValue(slowQuery.duration)
-  if (this.trace && this.trace.duration >= slowQuery.duration) return
+  if (this.trace && this.trace.duration >= slowQuery.duration) {
+    return
+  }
   this.trace = slowQuery
 }
 
@@ -32,11 +34,11 @@ QuerySample.prototype.merge = function merge(sample) {
 }
 
 QuerySample.prototype.prepareJSON = function prepareJSON(done) {
-  var transaction = this.trace.segment.transaction
-  var sample = this
-  var trace = sample.trace
+  const transaction = this.trace.segment.transaction
+  const sample = this
+  const trace = sample.trace
 
-  var params = sample.getParams()
+  const params = sample.getParams()
 
   if (!this.tracer.config.simple_compression) {
     codec.encode(params, respond)
@@ -45,7 +47,9 @@ QuerySample.prototype.prepareJSON = function prepareJSON(done) {
   }
 
   function respond(err, data) {
-    if (err) return done(err)
+    if (err) {
+      return done(err)
+    }
 
     done(null, _getJSON(sample, trace, transaction, data))
   }
@@ -77,9 +81,9 @@ function _getJSON(sample, trace, transaction, data) {
 }
 
 QuerySample.prototype.getParams = function getParams() {
-  var segmentAttrs = this.trace.segment.getAttributes()
-  var params = {
-    backtrace: this.trace.trace,
+  const segmentAttrs = this.trace.segment.getAttributes()
+  const params = {
+    backtrace: this.trace.trace
   }
 
   if (segmentAttrs.host) {
